@@ -1,6 +1,11 @@
-export const formData = {
-  name: 'Максим Слеба',
-  email: 'maksym@test.com',
-  currentAddress: 'м. Київ, вул. Тестова, 1',
-  permanentAddress: 'м. Львів, вул. Друга, 2',
+// lab1data.ts
+
+export const userData = {
+  firstName: 'Іван',
+  lastName: 'Петренко',
+  userName: 'ivanpetrenko',
+  password: 'Test123!',
+  email: 'ivan@example.com',
+  currentAddress: 'м. Київ',
+  permanentAddress: 'м. Львів'
 };
