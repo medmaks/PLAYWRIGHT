@@ -1,23 +1,21 @@
 import { test, expect } from '@playwright/test';
 
 test('Валідація: порожній email', async ({ page }) => {
-  await page.goto('/');
+  await page.goto(process.env.BASE_URL!);
 
-  // Логін
-  await page.getByLabel('Your email').fill(process.env.EDU_USERNAME || 'info+sleba@edu-planner.com');
-  await page.getByLabel('Password').fill(process.env.EDU_PASSWORD || 'ZYz8tEW9FgISdC');
-  await page.getByRole('button', { name: 'Sign in' }).click();
+  await page.getByPlaceholder('Your email').fill(process.env.EDU_EMAIL!);
+  await page.getByPlaceholder('Password').fill(process.env.EDU_PASSWORD!);
+  await page.getByRole('button', { name: /Sign in/i }).click();
 
-  // Перехід у розділ Teachers
+  // Переходимо в "Організація" -> "Викладачі"
   await page.click('text=Організація');
-  await page.click('text=Teachers');
-  await page.click('text=Add Teacher');
+  await page.click('text=Викладачі');
+  await page.click('text=Додати викладача');
 
-  // Валідація порожнього email
-  await page.fill('#teacherName', 'Викладач Без Email');
-  await page.fill('#teacherEmail', '');
-  await page.click('button:has-text("Save")');
+  await page.fill('#name', 'Тест Помилка');
+  await page.fill('#email', ''); // порожній email
+  await page.selectOption('#group', 'ІТ-101');
+  await page.click('button:text("Зберегти")');
 
-  // Перевірка помилки
-  await expect(page.locator('.error-message')).toContainText('Email обов’язковий');
+  await expect(page.locator('.error')).toContainText('Email обов\'язковий');
 });

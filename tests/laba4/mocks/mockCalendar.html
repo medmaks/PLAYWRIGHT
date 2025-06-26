@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Calendar Mock</title>
+    <style>
+      #calendar {
+        display: grid;
+        gap: 8px;
+        padding: 16px;
+      }
+      .slot {
+        width: 200px;
+        height: 60px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        padding: 8px;
+        position: relative;
+      }
+      .event {
+        width: 190px;
+        height: 40px;
+        background: #4682b4;
+        color: white;
+        padding: 8px;
+        border-radius: 4px;
+        cursor: move;
+        user-select: none;
+      }
+      .conflict {
+        border: 2px solid #ff0000;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="calendar">
+      <div class="slot" data-time="09:00"></div>
+      <div class="slot" data-time="09:30"></div>
+      <div class="slot" data-time="10:00"></div>
+      <div class="slot" data-time="10:30"></div>
+      <div class="slot" data-time="11:00"></div>
+    </div>
+
+    <div class="event" id="event1" draggable="true">Meeting</div>
+
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        const event = document.getElementById('event1');
+        const slots = document.querySelectorAll('.slot');
+
+        event.addEventListener('dragstart', (e) => {
+          e.dataTransfer.setData('text/plain', e.target.id);
+          e.target.style.opacity = '0.5';
+        });
+
+        event.addEventListener('dragend', (e) => {
+          e.target.style.opacity = '1';
+        });
+
+        slots.forEach((slot) => {
+          slot.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            slot.style.backgroundColor = '#f0f8ff';
+          });
+
+          slot.addEventListener('dragleave', () => {
+            slot.style.backgroundColor = '';
+          });
+
+          slot.addEventListener('drop', (e) => {
+            e.preventDefault();
+            slot.style.backgroundColor = '';
+
+            const eventId = e.dataTransfer.getData('text/plain');
+            const draggedEvent = document.getElementById(eventId);
+
+            if (slot.children.length === 0) {
+              slot.appendChild(draggedEvent);
+              slot.classList.remove('conflict');
+            } else {
+              slot.classList.add('conflict');
+            }
+          });
+        });
+      });
+    </script>
+  </body>
+</html>
